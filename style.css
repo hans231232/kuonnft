@@ -1,0 +1,895 @@
+* { box-sizing: border-box; }
+html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: #000; font-family: Georgia, 'Times New Roman', serif; color: #111; }
+button { font: inherit; }
+.page { position: fixed; inset: 0; opacity: 0; pointer-events: none; transition: opacity 680ms ease; background: #000; }
+.page.active { opacity: 1; pointer-events: auto; }
+.fullscreen-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+#homePage::after, .story-page::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.04), rgba(0,0,0,0.03) 55%, rgba(0,0,0,0.10)); z-index: 1; }
+.portal-zone { position: absolute; z-index: 5; border: 0; background: rgba(255,255,255,0); cursor: pointer; border-radius: 50%; }
+.portal-zone::after { content: ''; position: absolute; inset: -8%; border-radius: 50%; opacity: 0; background: radial-gradient(circle, rgba(255,255,255,.28), rgba(255,255,255,0) 66%); transition: opacity .35s ease, transform .35s ease; }
+.portal-zone:hover::after { opacity: 1; transform: scale(1.06); }
+.right-portal { left: 63%; top: 40%; width: 26%; height: 42%; }
+.sound-toggle, .terms-link { position: fixed; z-index: 24; border: 1px solid rgba(20,20,20,.65); background: rgba(238,238,238,.74); color: #111; letter-spacing: 2px; font-size: clamp(10px, .8vw, 14px); padding: 9px 14px; cursor: pointer; backdrop-filter: blur(3px); transition: transform .25s ease, background .25s ease; }
+.sound-toggle:hover, .terms-link:hover { transform: translateY(-1px); background: rgba(255,255,255,.92); }
+.sound-toggle { right: 24px; bottom: 24px; }
+.terms-link { left: 50%; bottom: 20px; transform: translateX(-50%); }
+.terms-link:hover { transform: translateX(-50%) translateY(-1px); }
+.transition-page { background: #000; display: grid; place-items: center; z-index: 50; }
+.transition-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: scale(.992); transition: opacity 260ms ease, transform 260ms ease; }
+.transition-video.show { opacity: 1; transform: scale(1); }
+.story-page { z-index: 2; }
+.navbar-img { position: absolute; top: 0; left: 0; width: 100vw; height: auto; z-index: 8; pointer-events: none; user-select: none; }
+.scroll-wrap { position: absolute; left: 50%; top: 55%; width: min(76vw, 122vh); aspect-ratio: 4000/2500; transform: translate(-50%, -50%) scale(.90); z-index: 5; filter: drop-shadow(0 26px 34px rgba(0,0,0,.34)); animation: scrollEnter 880ms cubic-bezier(.17,.84,.24,1) both; }
+@keyframes scrollEnter { from { opacity: 0; transform: translate(-50%, -48%) scale(.84); filter: drop-shadow(0 10px 18px rgba(0,0,0,.18)) blur(.4px); } to { opacity: 1; transform: translate(-50%, -50%) scale(.90); filter: drop-shadow(0 26px 34px rgba(0,0,0,.34)); } }
+.scroll-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; user-select: none; pointer-events: none; }
+.base { z-index: 1; }
+.hover-img { z-index: 2; opacity: 0; transition: opacity 500ms ease, transform 500ms ease, filter 500ms ease; transform: scale(1); filter: drop-shadow(0 0 0 rgba(255,255,255,0)); }
+.hover-img.active { opacity: 1; transform: scale(1.008); filter: drop-shadow(0 0 16px rgba(255,255,255,.34)); }
+.scroll-glow { position: absolute; inset: 15% 12%; z-index: 0; border-radius: 22px; pointer-events: none; background: radial-gradient(circle at 50% 50%, rgba(255,255,255,.13), rgba(255,255,255,0) 72%); opacity: .42; animation: glowPulse 3.6s ease-in-out infinite; }
+@keyframes glowPulse { 0%,100% { opacity: .24; transform: scale(.985); } 50% { opacity: .50; transform: scale(1.012); } }
+.panel-zone { position: absolute; top: 22.5%; height: 55.5%; z-index: 6; border: 0; background: rgba(255,0,0,0); cursor: pointer; }
+.panel-zone:hover { background: rgba(255,255,255,.03); }
+.panel-1 { left: 16.0%; width: 16.2%; }
+.panel-2 { left: 32.2%; width: 16.5%; }
+.panel-3 { left: 48.7%; width: 16.6%; }
+.panel-4 { left: 65.3%; width: 16.2%; }
+.nav-hotspots { position: fixed; inset: 0; z-index: 14; pointer-events: none; }
+.nav-hotspot { position: absolute; top: 1.25vw; height: 4.15vw; max-height: 70px; min-height: 40px; border: 0; background: transparent; cursor: pointer; pointer-events: auto; border-radius: 0; transform: none; transition: none; }
+.nav-hotspot::after { content: none; }
+.nav-hotspot:hover, .nav-hotspot:focus-visible { transform: none; background: transparent; box-shadow: none; filter: none; outline: none; }
+.nav-hotspot:hover::after, .nav-hotspot:focus-visible::after { content: none; }
+.nav-hotspot:active { transform: none; background: transparent; box-shadow: none; }
+.nav-hotspot.menu { left: 0.55vw; width: 4.85vw; }
+/* Navbar asset order: MENU icon, BACK icon, KUON logo.
+   HOME/logo stays non-clickable; BACK hitbox is aligned directly on the back icon. */
+.nav-hotspot.home { left: 12.4vw; width: 10.6vw; pointer-events: none; cursor: default; }
+.nav-hotspot.back { left: 7.25vw; width: 4.25vw; }
+.nav-hotspot.social { top: 1.45vw; height: 3.25vw; min-height: 32px; max-height: 54px; border-radius: 0; }
+.nav-hotspot.twitter { right: 7.0vw; width: 3.2vw; }
+.nav-hotspot.discord { right: 2.6vw; width: 3.2vw; }
+.menu-panel { position: fixed; top: clamp(62px, 7.2vw, 120px); left: 20px; z-index: 22; display: flex; flex-direction: column; gap: 8px; padding: 18px; min-width: 180px; background: rgba(238,238,238,.84); border: 1px solid rgba(0,0,0,.45); backdrop-filter: blur(5px); transform: translateY(-10px); opacity: 0; pointer-events: none; transition: opacity .25s ease, transform .25s ease; }
+.menu-panel.open { transform: translateY(0); opacity: 1; pointer-events: auto; }
+.menu-panel button { background: transparent; border: 0; text-align: left; padding: 8px 4px; cursor: pointer; letter-spacing: 2px; font-weight: bold; }
+.story-sound { display: none; }
+body.story-active .story-sound { display: block; }
+.modal { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: 28px; background: rgba(0,0,0,.72); opacity: 0; pointer-events: none; transition: opacity .25s ease; }
+.modal.open { opacity: 1; pointer-events: auto; }
+.modal-card { position: relative; width: min(860px, 92vw); max-height: 84vh; overflow: auto; padding: 38px; background: rgba(235,235,232,.94); border: 1px solid rgba(255,255,255,.65); box-shadow: 0 30px 80px rgba(0,0,0,.45); line-height: 1.7; }
+.modal-card h1 { margin-top: 0; font-size: 24px; letter-spacing: 1px; }
+.modal-card h2 { font-size: 16px; margin-top: 22px; }
+.modal-card a { color: inherit; font-weight: bold; text-decoration: underline; text-underline-offset: 3px; }
+.modal-card ul { margin: 8px 0 0 20px; padding: 0; }
+.modal-card li { margin: 4px 0; }
+.modal-close { position: sticky; top: 0; float: right; border: 1px solid #111; background: #eee; padding: 7px 12px; cursor: pointer; letter-spacing: 1px; }
+.signature { margin-top: 28px; font-weight: bold; text-align: center; }
+body.debug .portal-zone, body.debug .panel-zone, body.debug .nav-hotspot { position: absolute; top: 1.25vw; height: 4.15vw; max-height: 70px; min-height: 40px; border: 0; background: transparent; cursor: pointer; pointer-events: auto; border-radius: 0; transform: none; transition: none; }
+@media (max-width: 900px) { .scroll-wrap { width: 118vw; top: 56%; } .right-portal { left: 56%; top: 35%; width: 39%; height: 48%; } .sound-toggle, .terms-link { font-size: 10px; padding: 7px 10px; } }
+
+/* THE RELICS additions */
+.relics-portal { left: 3.2%; top: 47%; width: 30%; height: 42%; border-radius: 34%; }
+.relics-page { z-index: 2; }
+.relics-page::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(circle at 50% 54%, rgba(255,255,255,0.045), rgba(0,0,0,0.04) 58%, rgba(0,0,0,0.14)); z-index: 1; }
+.relics-sound { display: none; }
+body.relics-active .relics-sound { display: block; }
+body.relics-active .story-sound { display: none; }
+@media (max-width: 900px) { .relics-portal { left: 0%; top: 45%; width: 40%; height: 43%; } }
+
+
+.footer-links{
+  position:fixed;
+  left:50%;
+  bottom:12px;
+  transform:translateX(-50%);
+  z-index:24;
+  font-size:10px;
+  letter-spacing:1px;
+  opacity:.55;
+  white-space:nowrap;
+}
+.footer-links a{
+  color:#000;
+  text-decoration:none;
+  transition:opacity .25s ease;
+}
+.footer-links a:hover{
+  opacity:1;
+}
+.footer-links span{
+  margin:0 6px;
+  opacity:.45;
+  color:#000;
+}
+
+.footer-links button {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: #000;
+  cursor: pointer;
+  font-size: inherit;
+  letter-spacing: inherit;
+  font-family: inherit;
+  transition: opacity .2s ease;
+}
+.footer-links button:hover { opacity: 1; }
+
+
+.home-language-switch {
+  position: fixed;
+  top: 4.4vh;
+  right: 2.7vw;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 14px;
+  line-height: 1;
+  letter-spacing: .5px;
+  color: #000;
+  opacity: .82;
+  white-space: nowrap;
+}
+
+.home-language-switch button {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: rgba(0,0,0,.48);
+  cursor: pointer;
+  font: inherit;
+  transition: opacity .2s ease;
+}
+
+.home-language-switch button.active {
+  color: rgba(0,0,0,.95);
+  font-weight: 600;
+}
+
+.home-language-switch button:hover {
+  opacity: 1;
+}
+
+.home-language-switch span {
+  color: rgba(0,0,0,.45);
+}
+
+body.story-active .home-language-switch,
+body.relics-active .home-language-switch {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .home-language-switch {
+    top: 18px;
+    right: 18px;
+    font-size: 12px;
+  }
+}
+
+
+/* Navbar hotspots must not be clickable on the main homepage. */
+#navHotspots,
+#relicsNavHotspots {
+  display: none;
+}
+
+body.story-active #navHotspots {
+  display: block;
+}
+
+body.relics-active #relicsNavHotspots {
+  display: block;
+}
+
+/* Keep the wrong navbar disabled on the other page. */
+body.story-active #relicsNavHotspots,
+body.relics-active #navHotspots {
+  display: none;
+}
+
+/* KUON slide-scroll menu */
+.scroll-menu {
+  top: 50%;
+  left: 0;
+  width: 4000px;
+  height: 2500px;
+  min-width: 0;
+  max-width: none;
+  padding: 0;
+  gap: 0;
+  border: 0;
+  background: url('assets/menu/menu-scroll-ui.png') left top / 4000px 2500px no-repeat;
+  backdrop-filter: none;
+  opacity: 1;
+  pointer-events: none;
+  overflow: visible;
+  transform-origin: left center;
+  transform: translate3d(-105%, -50%, 0) scale(.6);
+  transition: transform 720ms cubic-bezier(.17,.84,.24,1);
+  filter: drop-shadow(0 24px 34px rgba(0,0,0,.35));
+}
+
+.scroll-menu.open {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate3d(0, -50%, 0) scale(.6);
+}
+
+.scroll-menu button {
+  position: absolute;
+  width: 625px;
+  height: 200px;
+  padding: 0 48px 0 64px;
+  border: 0;
+  background: transparent;
+  color: #151515;
+  text-align: center;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 34px;
+  line-height: 1;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-shadow: 0 1px 0 rgba(255,255,255,.55);
+  cursor: pointer;
+}
+
+.scroll-menu button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image: url('assets/menu/menu-item-frame.png');
+  background-repeat: no-repeat;
+  background-size: 4000px 2500px;
+  background-position: -307px -896px;
+  opacity: .92;
+  transition: opacity .22s ease, filter .22s ease;
+}
+
+.scroll-menu button:hover::before,
+.scroll-menu button:focus-visible::before {
+  opacity: 1;
+  filter: drop-shadow(0 0 14px rgba(255,255,255,.52));
+}
+
+.scroll-menu button:focus-visible { outline: none; }
+
+.scroll-menu button:nth-child(1) { left: 385px; top: 910px; }
+.scroll-menu button:nth-child(2) { left: 1120px; top: 910px; }
+.scroll-menu button:nth-child(3) { left: 385px; top: 1160px; }
+.scroll-menu button:nth-child(4) { left: 1120px; top: 1160px; }
+.scroll-menu button:nth-child(5) { left: 385px; top: 1410px; }
+.scroll-menu button:nth-child(6) { left: 1120px; top: 1410px; }
+
+/* Fix: keep navbar/menu click zones above the slide-scroll panels so the same MENU button can close them. */
+#navHotspots,
+#relicsNavHotspots {
+  z-index: 60;
+}
+
+#menuBtn,
+#relicsMenuBtn,
+#backBtn,
+#relicsBackBtn {
+  z-index: 61;
+}
+
+
+/* KUON character page additions */
+.kuon-page { z-index: 2; }
+.kuon-page::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(circle at 50% 52%, rgba(255,255,255,0.035), rgba(0,0,0,0.05) 58%, rgba(0,0,0,0.16)); z-index: 1; }
+.kuon-sound { display: none; }
+body.kuon-active .kuon-sound { display: block; }
+body.kuon-active .story-sound,
+body.kuon-active .relics-sound { display: none; }
+
+#kuonNavHotspots { display: none; }
+body.kuon-active #kuonNavHotspots { display: block; }
+body.story-active #kuonNavHotspots,
+body.relics-active #kuonNavHotspots { display: none; }
+
+body.kuon-active .home-language-switch { display: none; }
+#kuonNavHotspots { z-index: 60; }
+#kuonMenuBtn,
+#kuonBackBtn { z-index: 61; }
+
+
+/* THE RELICS sealed clickable areas */
+.relics-sealed-hotspots {
+  position: fixed;
+  inset: 0;
+  z-index: 12;
+  pointer-events: none;
+}
+
+.relics-sealed-zone {
+  position: absolute;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.relics-sealed-zone:hover,
+.relics-sealed-zone:focus-visible {
+  outline: none;
+}
+
+.sealed-wallet {
+  left: 11.5vw;
+  top: 21.5vh;
+  width: 18.5vw;
+  height: 20vh;
+}
+
+.sealed-dreambeast {
+  left: 64.8vw;
+  top: 15.5vh;
+  width: 19.8vw;
+  height: 20.5vh;
+}
+
+.sealed-travelers {
+  left: 64.5vw;
+  top: 66vh;
+  width: 24.5vw;
+  height: 27vh;
+}
+
+.sealed-eternal-key {
+  left: 38vw;
+  top: 73vh;
+  width: 24vw;
+  height: 21vh;
+}
+
+.sealed-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  display: grid;
+  place-items: center;
+  background: rgba(0,0,0,.38);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .22s ease;
+}
+
+.sealed-modal.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.sealed-card {
+  position: relative;
+  width: min(420px, 82vw);
+  padding: 34px 26px 30px;
+  text-align: center;
+  color: #111;
+  background: rgba(238,238,235,.92);
+  border: 1px solid rgba(0,0,0,.58);
+  box-shadow: 0 24px 70px rgba(0,0,0,.38), inset 0 0 28px rgba(255,255,255,.45);
+  letter-spacing: 2px;
+}
+
+.sealed-card p {
+  margin: 0 0 13px;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.sealed-card span {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.sealed-close {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  border: 0;
+  background: transparent;
+  color: #111;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+body:not(.relics-active) .relics-sealed-hotspots {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .sealed-wallet { left: 8vw; top: 23vh; width: 25vw; height: 20vh; }
+  .sealed-dreambeast { left: 62vw; top: 18vh; width: 30vw; height: 20vh; }
+  .sealed-travelers { left: 60vw; top: 62vh; width: 36vw; height: 31vh; }
+  .sealed-eternal-key { left: 32vw; top: 72vh; width: 36vw; height: 22vh; }
+}
+
+
+/* ETERNAL KEY page */
+.eternal-key-page { z-index: 2; }
+.eternal-key-page::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(circle at 50% 54%, rgba(255,255,255,0.04), rgba(0,0,0,0.04) 58%, rgba(0,0,0,0.14)); z-index: 1; }
+.eternal-key-sound { display: none; }
+body.eternal-key-active .eternal-key-sound { display: block; }
+body.eternal-key-active .relics-sound,
+body.eternal-key-active .story-sound { display: none; }
+
+/* Fix: keep navigation controls clickable above Relics/Eternal Key hotspots */
+body.relics-active #relicsNavHotspots,
+body.eternal-key-active #eternalKeyNavHotspots,
+#roadmapNavHotspots {
+  display: block;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+body.relics-active #relicsMenuBtn,
+body.relics-active #relicsBackBtn,
+body.relics-active #relicsTwitterBtn,
+body.relics-active #relicsDiscordBtn,
+body.eternal-key-active #eternalKeyMenuBtn,
+body.eternal-key-active #eternalKeyBackBtn,
+body.eternal-key-active #eternalKeyTwitterBtn,
+body.eternal-key-active #eternalKeyDiscordBtn {
+  position: absolute;
+  z-index: 1001;
+  pointer-events: auto;
+}
+
+body.relics-active .relics-sealed-hotspots {
+  z-index: 20;
+}
+
+body.eternal-key-active #relicsNavHotspots,
+body.eternal-key-active #navHotspots,
+body.eternal-key-active #kuonNavHotspots,
+body.eternal-key-active #roadmapNavHotspots,
+body.roadmap-active #navHotspots,
+body.roadmap-active #kuonNavHotspots,
+body.roadmap-active #loreNavHotspots,
+body.roadmap-active #relicsNavHotspots,
+body.roadmap-active #eternalKeyNavHotspots,
+body.relics-active #eternalKeyNavHotspots,
+#roadmapNavHotspots {
+  display: none;
+}
+
+/* Fix: page nav hotspots must only be clickable on their own active page.
+   Prevent Story/Kuon/Relics/Eternal social links from sitting above Home Main. */
+#navHotspots,
+#kuonNavHotspots,
+#loreNavHotspots,
+#relicsNavHotspots,
+#eternalKeyNavHotspots,
+#roadmapNavHotspots {
+  display: none;
+}
+
+body.story-active #navHotspots,
+body.kuon-active #kuonNavHotspots,
+body.lore-active #loreNavHotspots,
+body.relics-active #relicsNavHotspots,
+body.eternal-key-active #eternalKeyNavHotspots,
+#roadmapNavHotspots {
+  display: block;
+}
+
+
+/* LORE page */
+.lore-page { z-index: 2; }
+.lore-page::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(circle at 50% 54%, rgba(255,255,255,0.035), rgba(0,0,0,0.045) 58%, rgba(0,0,0,0.15)); z-index: 1; }
+.lore-sound { display: none; }
+body.lore-active .lore-sound { display: block; }
+body.lore-active .story-sound,
+body.lore-active .relics-sound,
+body.lore-active .kuon-sound,
+body.lore-active .eternal-key-sound,
+body.lore-active .roadmap-sound { display: none; }
+body.lore-active .home-language-switch { display: none; }
+#loreNavHotspots { display: none; }
+body.lore-active #loreNavHotspots { display: block; z-index: 60; }
+#loreMenuBtn,
+#loreBackBtn { z-index: 61; }
+body.lore-active #navHotspots,
+body.lore-active #kuonNavHotspots,
+body.lore-active #relicsNavHotspots,
+body.lore-active #eternalKeyNavHotspots,
+#roadmapNavHotspots { display: none; }
+body.story-active #loreNavHotspots,
+body.kuon-active #loreNavHotspots,
+body.relics-active #loreNavHotspots,
+body.eternal-key-active #loreNavHotspots,
+body.roadmap-active #loreNavHotspots { display: none; }
+
+/* Include Lore navbar in page-only nav safety rule. */
+#loreNavHotspots { display: none; }
+body.lore-active #loreNavHotspots { display: block; }
+
+/* Lore narration button - separate from global sound toggle */
+.lore-narration-controls {
+  position: absolute;
+  left: 50%;
+  bottom: 92px;
+  transform: translateX(-50%);
+  z-index: 62;
+  pointer-events: none;
+}
+.lore-narration-btn {
+  pointer-events: auto;
+  border: 1px solid rgba(235,235,235,.45);
+  background: rgba(10,10,10,.58);
+  color: rgba(245,245,245,.94);
+  letter-spacing: 2px;
+  font-size: clamp(11px, .92vw, 15px);
+  padding: 11px 18px;
+  cursor: pointer;
+  backdrop-filter: blur(5px);
+  box-shadow: 0 0 18px rgba(255,255,255,.08);
+  transition: transform .25s ease, background .25s ease, border-color .25s ease;
+  white-space: nowrap;
+}
+.lore-narration-btn:hover {
+  transform: translateY(-1px);
+  background: rgba(24,24,24,.78);
+  border-color: rgba(255,255,255,.72);
+}
+@media (max-width: 900px) {
+  .lore-narration-controls { bottom: 82px; }
+  .lore-narration-btn { font-size: 10px; padding: 9px 12px; letter-spacing: 1.2px; }
+}
+
+
+/* ROADMAP page */
+.roadmap-page { z-index: 2; }
+.roadmap-page::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(circle at 50% 54%, rgba(255,255,255,0.035), rgba(0,0,0,0.04) 58%, rgba(0,0,0,0.14)); z-index: 1; }
+.roadmap-sound { display: none; }
+body.roadmap-active .roadmap-sound { display: block; }
+body.roadmap-active .story-sound,
+body.roadmap-active .relics-sound,
+body.roadmap-active .kuon-sound,
+body.roadmap-active .lore-sound,
+body.roadmap-active .eternal-key-sound { display: none; }
+body.roadmap-active .home-language-switch { display: none; }
+#roadmapNavHotspots { display: none; }
+body.roadmap-active #roadmapNavHotspots { display: block; z-index: 60; }
+#roadmapMenuBtn,
+#roadmapBackBtn { z-index: 61; }
+
+
+/* ROADMAP nav safety override */
+#roadmapNavHotspots { display: none; }
+body.roadmap-active #roadmapNavHotspots {
+  display: block;
+  z-index: 1000;
+  pointer-events: none;
+}
+body.roadmap-active #roadmapMenuBtn,
+body.roadmap-active #roadmapBackBtn,
+body.roadmap-active #roadmapTwitterBtn,
+body.roadmap-active #roadmapDiscordBtn {
+  position: absolute;
+  z-index: 1001;
+  pointer-events: auto;
+}
+body:not(.roadmap-active) #roadmapNavHotspots { display: none; }
+
+/* Mobile-only fit fix: reduce oversized pages without changing desktop layout or page structure. */
+@media (max-width: 900px) {
+  .fullscreen-video,
+  .transition-video {
+    object-fit: contain;
+    background: #000;
+  }
+
+  .scroll-wrap {
+    width: min(92vw, 142vh);
+    top: 55%;
+    transform: translate(-50%, -50%) scale(.82);
+  }
+
+  @keyframes scrollEnter {
+    from {
+      opacity: 0;
+      transform: translate(-50%, -48%) scale(.76);
+      filter: drop-shadow(0 10px 18px rgba(0,0,0,.18)) blur(.4px);
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(.82);
+      filter: drop-shadow(0 22px 30px rgba(0,0,0,.30));
+    }
+  }
+
+  .navbar-img {
+    width: 100vw;
+    max-height: 72px;
+    object-fit: contain;
+    object-position: top center;
+  }
+
+  .nav-hotspot {
+    top: 1.1vw;
+    height: 4vw;
+    min-height: 24px;
+    max-height: 42px;
+  }
+
+  .nav-hotspot.social {
+    top: 1.35vw;
+    height: 3vw;
+    min-height: 22px;
+    max-height: 34px;
+  }
+
+  .sound-toggle {
+    right: 14px;
+    bottom: 14px;
+    font-size: 9px;
+    padding: 6px 9px;
+    letter-spacing: 1px;
+  }
+
+  .footer-links {
+    bottom: 8px;
+    font-size: 8px;
+  }
+
+  .home-language-switch {
+    top: 12px;
+    right: 12px;
+    font-size: 10px;
+  }
+
+  .scroll-menu {
+    transform: translate3d(-105%, -50%, 0) scale(.30);
+  }
+
+  .scroll-menu.open {
+    transform: translate3d(0, -50%, 0) scale(.30);
+  }
+
+  .scroll-menu button {
+    font-size: 28px;
+  }
+
+  .modal-card {
+    width: min(760px, 94vw);
+    max-height: 82vh;
+    padding: 24px;
+  }
+}
+
+@media (max-width: 900px) and (orientation: portrait) {
+  .scroll-wrap {
+    width: 96vw;
+    top: 52%;
+    transform: translate(-50%, -50%) scale(.74);
+  }
+
+  .right-portal {
+    left: 58%;
+    top: 38%;
+    width: 34%;
+    height: 34%;
+  }
+
+  .relics-portal {
+    left: 1%;
+    top: 46%;
+    width: 34%;
+    height: 34%;
+  }
+
+  .scroll-menu {
+    top: 52%;
+    transform: translate3d(-105%, -50%, 0) scale(.24);
+  }
+
+  .scroll-menu.open {
+    transform: translate3d(0, -50%, 0) scale(.24);
+  }
+}
+
+@media (max-width: 900px) and (orientation: landscape) {
+  .scroll-wrap {
+    width: min(78vw, 120vh);
+    top: 56%;
+    transform: translate(-50%, -50%) scale(.72);
+  }
+
+  .scroll-menu {
+    transform: translate3d(-105%, -50%, 0) scale(.26);
+  }
+
+  .scroll-menu.open {
+    transform: translate3d(0, -50%, 0) scale(.26);
+  }
+
+  .lore-narration-controls {
+    bottom: 44px;
+  }
+}
+
+/* Mobile-only fix: keep all invisible click/hitbox layers hidden while preserving their tap targets. */
+@media (max-width: 900px) {
+  .portal-zone,
+  .panel-zone,
+  .nav-hotspot,
+  .relics-sealed-zone {
+    background: transparent !important;
+    border: 0 !important;
+    outline: 0 !important;
+    box-shadow: none !important;
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+  }
+
+  .portal-zone::before,
+  .portal-zone::after,
+  .panel-zone::before,
+  .panel-zone::after,
+  .nav-hotspot::before,
+  .nav-hotspot::after,
+  .relics-sealed-zone::before,
+  .relics-sealed-zone::after {
+    content: none !important;
+    display: none !important;
+    background: transparent !important;
+    border: 0 !important;
+    outline: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .portal-zone:hover,
+  .portal-zone:focus,
+  .portal-zone:focus-visible,
+  .portal-zone:active,
+  .panel-zone:hover,
+  .panel-zone:focus,
+  .panel-zone:focus-visible,
+  .panel-zone:active,
+  .nav-hotspot:hover,
+  .nav-hotspot:focus,
+  .nav-hotspot:focus-visible,
+  .nav-hotspot:active,
+  .relics-sealed-zone:hover,
+  .relics-sealed-zone:focus,
+  .relics-sealed-zone:focus-visible,
+  .relics-sealed-zone:active {
+    background: transparent !important;
+    border: 0 !important;
+    outline: 0 !important;
+    box-shadow: none !important;
+    filter: none !important;
+  }
+}
+
+
+/* Lore narration safety: button/hitbox is only visible and tappable on the actual Lore page. */
+.lore-narration-controls {
+  display: none;
+  pointer-events: none;
+}
+body.lore-active .lore-narration-controls {
+  display: block;
+}
+body:not(.lore-active) .lore-narration-btn {
+  pointer-events: none !important;
+}
+body.lore-active .lore-narration-btn {
+  pointer-events: auto;
+}
+
+/* Mobile-only menu size fix: make the slide-scroll menu fit the phone screen without changing desktop layout. */
+@media (max-width: 900px) {
+  .scroll-menu {
+    top: 50% !important;
+    left: 0 !important;
+    transform: translate3d(-105%, -50%, 0) scale(.18) !important;
+  }
+
+  .scroll-menu.open {
+    transform: translate3d(0, -50%, 0) scale(.18) !important;
+  }
+
+  .scroll-menu button {
+    font-size: 24px !important;
+  }
+}
+
+@media (max-width: 900px) and (orientation: portrait) {
+  .scroll-menu {
+    top: 50% !important;
+    transform: translate3d(-105%, -50%, 0) scale(.16) !important;
+  }
+
+  .scroll-menu.open {
+    transform: translate3d(0, -50%, 0) scale(.16) !important;
+  }
+
+  .scroll-menu button {
+    font-size: 24px !important;
+  }
+}
+
+@media (max-width: 900px) and (orientation: landscape) {
+  .scroll-menu {
+    top: 52% !important;
+    transform: translate3d(-105%, -50%, 0) scale(.17) !important;
+  }
+
+  .scroll-menu.open {
+    transform: translate3d(0, -50%, 0) scale(.17) !important;
+  }
+}
+
+/* Mobile navbar/menu alignment fix:
+   Keep the navbar readable on phones and align invisible link areas to the visible MENU/BACK/social icons. */
+@media (max-width: 900px) {
+  .navbar-img {
+    width: 100vw !important;
+    height: auto !important;
+    max-height: none !important;
+    object-fit: contain !important;
+    object-position: top left !important;
+  }
+
+  .nav-hotspot {
+    top: 1.25vw !important;
+    height: 4.15vw !important;
+    min-height: 28px !important;
+    max-height: 54px !important;
+  }
+
+  .nav-hotspot.menu { left: 0.55vw !important; width: 4.85vw !important; }
+  .nav-hotspot.back { left: 7.25vw !important; width: 4.25vw !important; }
+  .nav-hotspot.home { left: 12.4vw !important; width: 10.6vw !important; }
+
+  .nav-hotspot.social {
+    top: 1.45vw !important;
+    height: 3.25vw !important;
+    min-height: 24px !important;
+    max-height: 46px !important;
+  }
+  .nav-hotspot.twitter { right: 7.0vw !important; width: 3.2vw !important; }
+  .nav-hotspot.discord { right: 2.6vw !important; width: 3.2vw !important; }
+
+  .scroll-menu {
+    top: 51% !important;
+    left: 0 !important;
+    transform: translate3d(-105%, -50%, 0) scale(.195) !important;
+  }
+
+  .scroll-menu.open {
+    transform: translate3d(0, -50%, 0) scale(.195) !important;
+  }
+
+  .scroll-menu button {
+    font-size: 28px !important;
+  }
+}
+
+@media (max-width: 900px) and (orientation: portrait) {
+  .scroll-menu {
+    top: 51% !important;
+    transform: translate3d(-105%, -50%, 0) scale(.187) !important;
+  }
+
+  .scroll-menu.open {
+    transform: translate3d(0, -50%, 0) scale(.187) !important;
+  }
+}
+
+@media (max-width: 900px) and (orientation: landscape) {
+  .scroll-menu {
+    top: 52% !important;
+    transform: translate3d(-105%, -50%, 0) scale(.17) !important;
+  }
+
+  .scroll-menu.open {
+    transform: translate3d(0, -50%, 0) scale(.17) !important;
+  }
+}

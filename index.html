@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KUON</title>
+  <link rel="icon" type="image/png" href="assets/favicon/favicon.png" />
+  <link rel="apple-touch-icon" href="assets/favicon/favicon.png" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main id="homePage" class="page active">
+    <video id="homeVideo" class="fullscreen-video" autoplay muted loop playsinline preload="auto">
+      <source src="assets/home/Homepage.mp4" type="video/mp4" />
+    </video>
+    <audio id="homeAudio" src="assets/home/homepage sounds.mp3" loop preload="auto"></audio>
+    <button id="kuonStoryPortal" class="portal-zone right-portal" aria-label="Enter KUON STORY"></button>
+    <button id="theRelicsPortal" class="portal-zone relics-portal" aria-label="Enter THE RELICS"></button>
+    <button id="homeSoundToggle" class="sound-toggle">SOUND ON</button>
+    <div id="homeLanguageSwitch" class="home-language-switch" aria-label="Language switch">
+      <button type="button" data-lang="en" class="active">EN</button>
+      <span>|</span>
+      <button type="button" data-lang="jp">日本語</button>
+    </div>
+    <div class="footer-links">
+      <button id="termsOpen" type="button" data-i18n="termsLink">Terms of Service</button>
+      <span>|</span>
+      <button id="privacyOpen" type="button" data-i18n="privacyLink">Privacy & Credits</button>
+    </div>
+  </main>
+
+  <section id="transitionPage" class="page transition-page" aria-hidden="true">
+    <video id="transitionVideo" class="transition-video" preload="auto" playsinline muted>
+      <source src="assets/story/kuon-story-transition.mp4" type="video/mp4" />
+    </video>
+    <video id="relicTransitionVideo" class="transition-video" preload="auto" playsinline muted>
+      <source src="assets/relics/the relics-story-transition.mp4" type="video/mp4" />
+    </video>
+  </section>
+
+  <section id="storyPage" class="page story-page" aria-hidden="true">
+    <video id="storyBg" class="fullscreen-video" autoplay muted loop playsinline preload="auto">
+      <source src="assets/story/background kuon.mp4" type="video/mp4" />
+    </video>
+    <audio id="storyAudio" src="assets/story/kuon sounds.mp3" loop preload="auto"></audio>
+
+    <img class="navbar-img" src="assets/story/Navbar.png" alt="KUON navigation" draggable="false" />
+
+    <div id="scrollWrap" class="scroll-wrap">
+      <img id="scrollBase" class="scroll-img base" src="assets/story/scroll-default.png" alt="KUON STORY scroll" draggable="false" />
+      <img id="hoverImg" class="scroll-img hover-img" alt="active panel" draggable="false" />
+      <div class="scroll-glow"></div>
+      <button class="panel-zone panel-1" data-hover="assets/story/hover (1).png" data-label="KUON" aria-label="KUON"></button>
+      <button class="panel-zone panel-2" data-hover="assets/story/hover (2).png" data-label="LORE" aria-label="LORE"></button>
+      <button class="panel-zone panel-3" data-hover="assets/story/hover (3).png" data-label="ROADMAP" aria-label="ROADMAP"></button>
+      <button class="panel-zone panel-4" data-hover="assets/story/hover (4).png" data-label="ARCHIVE" aria-label="ARCHIVE"></button>
+    </div>
+
+    <div id="navHotspots" class="nav-hotspots">
+      <button id="menuBtn" class="nav-hotspot menu" aria-label="Menu"></button>
+      <button id="homeBtn" class="nav-hotspot home" aria-label="Home"></button>
+      <button id="backBtn" class="nav-hotspot back" aria-label="Back"></button>
+      <a id="twitterBtn" class="nav-hotspot social twitter" href="https://x.com/KUONNFT" target="_blank" rel="noopener noreferrer" aria-label="Open KUON on X"></a>
+      <a id="discordBtn" class="nav-hotspot social discord" href="https://discord.com/" target="_blank" rel="noopener noreferrer" aria-label="Open KUON Discord"></a>
+    </div>
+
+    <div id="menuPanel" class="menu-panel scroll-menu" aria-hidden="true">
+      <button data-target="kuon" data-i18n="kuon">KUON</button>
+      <button data-target="lore" data-i18n="lore">LORE</button>
+      <button data-target="roadmap" data-i18n="roadmap">ROADMAP</button>
+      <button data-target="archive" data-i18n="archive">ARCHIVE</button>
+      <button data-target="home" data-i18n="home">HOME</button>
+      <button data-target="relics" data-i18n="theRelics">THE RELICS</button>
+    </div>
+
+    <button id="storySoundToggle" class="sound-toggle story-sound">SOUND ON</button>
+  </section>
+
+
+  <section id="kuonPage" class="page kuon-page" aria-hidden="true">
+    <video id="kuonBg" class="fullscreen-video" autoplay muted loop playsinline preload="auto">
+      <source src="assets/kuon/kuonpage background.mp4" type="video/mp4" />
+    </video>
+
+    <img class="navbar-img" src="assets/story/Navbar.png" alt="KUON navigation" draggable="false" />
+
+    <div id="kuonNavHotspots" class="nav-hotspots kuon-nav-hotspots">
+      <button id="kuonMenuBtn" class="nav-hotspot menu" aria-label="Menu"></button>
+      <button id="kuonHomeBtn" class="nav-hotspot home" aria-label="Home"></button>
+      <button id="kuonBackBtn" class="nav-hotspot back" aria-label="Back"></button>
+      <a id="kuonTwitterBtn" class="nav-hotspot social twitter" href="https://x.com/KUONNFT" target="_blank" rel="noopener noreferrer" aria-label="Open KUON on X"></a>
+      <a id="kuonDiscordBtn" class="nav-hotspot social discord" href="https://discord.com/" target="_blank" rel="noopener noreferrer" aria-label="Open KUON Discord"></a>
+    </div>
+
+    <div id="kuonMenuPanel" class="menu-panel scroll-menu" aria-hidden="true">
+      <button data-target="kuon" data-i18n="kuon">KUON</button>
+      <button data-target="lore" data-i18n="lore">LORE</button>
+      <button data-target="roadmap" data-i18n="roadmap">ROADMAP</button>
+      <button data-target="archive" data-i18n="archive">ARCHIVE</button>
+      <button data-target="home" data-i18n="home">HOME</button>
+      <button data-target="relics" data-i18n="theRelics">THE RELICS</button>
+    </div>
+
+    <button id="kuonSoundToggle" class="sound-toggle kuon-sound">SOUND ON</button>
+  </section>
+
+  <section id="lorePage" class="page lore-page" aria-hidden="true">
+    <video id="loreBg" class="fullscreen-video" autoplay muted loop playsinline preload="auto">
+      <source src="assets/lore/Lore Background.mp4" type="video/mp4" />
+    </video>
+
+    <img class="navbar-img" src="assets/story/Navbar.png" alt="LORE navigation" draggable="false" />
+
+    <div id="loreNavHotspots" class="nav-hotspots lore-nav-hotspots">
+      <button id="loreMenuBtn" class="nav-hotspot menu" aria-label="Menu"></button>
+      <button id="loreHomeBtn" class="nav-hotspot home" aria-label="Home"></button>
+      <button id="loreBackBtn" class="nav-hotspot back" aria-label="Back"></button>
+      <a id="loreTwitterBtn" class="nav-hotspot social twitter" href="https://x.com/KUONNFT" target="_blank" rel="noopener noreferrer" aria-label="Open KUON on X"></a>
+      <a id="loreDiscordBtn" class="nav-hotspot social discord" href="https://discord.com/" target="_blank" rel="noopener noreferrer" aria-label="Open KUON Discord"></a>
+    </div>
+
+    <div id="loreMenuPanel" class="menu-panel scroll-menu" aria-hidden="true">
+      <button data-target="kuon" data-i18n="kuon">KUON</button>
+      <button data-target="lore" data-i18n="lore">LORE</button>
+      <button data-target="roadmap" data-i18n="roadmap">ROADMAP</button>
+      <button data-target="archive" data-i18n="archive">ARCHIVE</button>
+      <button data-target="home" data-i18n="home">HOME</button>
+      <button data-target="relics" data-i18n="theRelics">THE RELICS</button>
+    </div>
+
+    <div class="lore-narration-controls" aria-label="Lore narration controls">
+      <button id="loreNarrationBtn" class="lore-narration-btn" type="button" data-i18n="listenStory">▶ Listen to the Story</button>
+      <audio id="loreNarration" src="assets/lore/lore-audio.mp3" preload="metadata"></audio>
+    </div>
+
+    <button id="loreSoundToggle" class="sound-toggle lore-sound">SOUND ON</button>
+  </section>
+
+  <section id="roadmapPage" class="page roadmap-page" aria-hidden="true">
+    <video id="roadmapBg" class="fullscreen-video" autoplay muted loop playsinline preload="auto">
+      <source src="assets/roadmap/ROADMAP.mp4" type="video/mp4" />
+    </video>
+
+    <img class="navbar-img" src="assets/story/Navbar.png" alt="ROADMAP navigation" draggable="false" />
+
+    <div id="roadmapNavHotspots" class="nav-hotspots roadmap-nav-hotspots">
+      <button id="roadmapMenuBtn" class="nav-hotspot menu" aria-label="Menu"></button>
+      <button id="roadmapHomeBtn" class="nav-hotspot home" aria-label="Home"></button>
+      <button id="roadmapBackBtn" class="nav-hotspot back" aria-label="Back"></button>
+      <a id="roadmapTwitterBtn" class="nav-hotspot social twitter" href="https://x.com/KUONNFT" target="_blank" rel="noopener noreferrer" aria-label="Open KUON on X"></a>
+      <a id="roadmapDiscordBtn" class="nav-hotspot social discord" href="https://discord.com/" target="_blank" rel="noopener noreferrer" aria-label="Open KUON Discord"></a>
+    </div>
+
+    <div id="roadmapMenuPanel" class="menu-panel scroll-menu" aria-hidden="true">
+      <button data-target="kuon" data-i18n="kuon">KUON</button>
+      <button data-target="lore" data-i18n="lore">LORE</button>
+      <button data-target="roadmap" data-i18n="roadmap">ROADMAP</button>
+      <button data-target="archive" data-i18n="archive">ARCHIVE</button>
+      <button data-target="home" data-i18n="home">HOME</button>
+      <button data-target="relics" data-i18n="theRelics">THE RELICS</button>
+    </div>
+
+    <button id="roadmapSoundToggle" class="sound-toggle roadmap-sound">SOUND ON</button>
+  </section>
+
+  <section id="relicsPage" class="page relics-page" aria-hidden="true">
+    <video id="relicsBg" class="fullscreen-video" autoplay muted loop playsinline preload="auto">
+      <source src="assets/relics/background the relics.mp4" type="video/mp4" />
+    </video>
+    <audio id="relicsAudio" src="assets/relics/The relics sounds.mp3" loop preload="auto"></audio>
+
+    <img class="navbar-img" src="assets/relics/Navbar.png" alt="THE RELICS navigation" draggable="false" />
+
+    <div id="relicsNavHotspots" class="nav-hotspots relics-nav-hotspots">
+      <button id="relicsMenuBtn" class="nav-hotspot menu" aria-label="Menu"></button>
+      <button id="relicsHomeBtn" class="nav-hotspot home" aria-label="Home"></button>
+      <button id="relicsBackBtn" class="nav-hotspot back" aria-label="Back"></button>
+      <a id="relicsTwitterBtn" class="nav-hotspot social twitter" href="https://x.com/KUONNFT" target="_blank" rel="noopener noreferrer" aria-label="Open KUON on X"></a>
+      <a id="relicsDiscordBtn" class="nav-hotspot social discord" href="https://discord.com/" target="_blank" rel="noopener noreferrer" aria-label="Open KUON Discord"></a>
+    </div>
+
+    <div id="relicsMenuPanel" class="menu-panel scroll-menu" aria-hidden="true">
+      <button data-target="eternal-key" data-i18n="eternalKey">ETERNAL KEY</button>
+      <button data-target="travelers" data-i18n="travelers">DREAMWALKERS</button>
+      <button data-target="dreambeasts" data-i18n="dreambeasts">DREAMBEASTS</button>
+      <button data-target="wallet-checker" data-i18n="walletChecker">WALLET CHECKER</button>
+      <button data-target="home" data-i18n="home">HOME</button>
+      <button data-target="story" data-i18n="kuonStory">KUON STORY</button>
+    </div>
+
+    <div class="relics-sealed-hotspots" aria-label="Sealed relic links">
+      <button class="relics-sealed-zone sealed-wallet" type="button" aria-label="Wallet Verify sealed"></button>
+      <button class="relics-sealed-zone sealed-dreambeast" type="button" aria-label="Dreambeast sealed"></button>
+      <button class="relics-sealed-zone sealed-travelers" type="button" aria-label="Travelers sealed"></button>
+      <button class="relics-sealed-zone sealed-eternal-key" type="button" aria-label="Eternal Key sealed"></button>
+    </div>
+
+    <button id="relicsSoundToggle" class="sound-toggle relics-sound">SOUND ON</button>
+  </section>
+
+  <section id="eternalKeyPage" class="page eternal-key-page" aria-hidden="true">
+    <video id="eternalKeyBg" class="fullscreen-video" autoplay muted loop playsinline preload="auto">
+      <source src="assets/eternal-key/ETERNAL KEY background.mp4" type="video/mp4" />
+    </video>
+    <audio id="eternalKeyAudio" src="assets/eternal-key/eternal-key-sounds.mp3" loop preload="auto"></audio>
+
+    <img class="navbar-img" src="assets/relics/Navbar.png" alt="ETERNAL KEY navigation" draggable="false" />
+
+    <div id="eternalKeyNavHotspots" class="nav-hotspots eternal-key-nav-hotspots">
+      <button id="eternalKeyMenuBtn" class="nav-hotspot menu" aria-label="Menu"></button>
+      <button id="eternalKeyHomeBtn" class="nav-hotspot home" aria-label="Home"></button>
+      <button id="eternalKeyBackBtn" class="nav-hotspot back" aria-label="Back"></button>
+      <a id="eternalKeyTwitterBtn" class="nav-hotspot social twitter" href="https://x.com/KUONNFT" target="_blank" rel="noopener noreferrer" aria-label="Open KUON on X"></a>
+      <a id="eternalKeyDiscordBtn" class="nav-hotspot social discord" href="https://discord.com/" target="_blank" rel="noopener noreferrer" aria-label="Open KUON Discord"></a>
+    </div>
+
+    <div id="eternalKeyMenuPanel" class="menu-panel scroll-menu" aria-hidden="true">
+      <button data-target="eternal-key" data-i18n="eternalKey">ETERNAL KEY</button>
+      <button data-target="travelers" data-i18n="travelers">DREAMWALKERS</button>
+      <button data-target="dreambeasts" data-i18n="dreambeasts">DREAMBEASTS</button>
+      <button data-target="wallet-checker" data-i18n="walletChecker">WALLET CHECKER</button>
+      <button data-target="home" data-i18n="home">HOME</button>
+      <button data-target="relics" data-i18n="theRelics">THE RELICS</button>
+      <button data-target="story" data-i18n="kuonStory">KUON STORY</button>
+    </div>
+
+    <button id="eternalKeySoundToggle" class="sound-toggle eternal-key-sound">SOUND ON</button>
+  </section>
+
+
+  <div id="sealedModal" class="sealed-modal" aria-hidden="true">
+    <div class="sealed-card" role="dialog" aria-modal="true" aria-label="STATUS: SEALED">
+      <button id="sealedClose" class="sealed-close" type="button" aria-label="Close sealed notice">×</button>
+      <p>STATUS: SEALED</p>
+      <span>Return when the Gate opens.</span>
+    </div>
+  </div>
+
+  <div id="termsModal" class="modal" aria-hidden="true">
+    <div class="modal-card">
+      <button id="termsClose" class="modal-close" data-i18n="close">CLOSE</button>
+      <div data-i18n-html="termsContent">
+        <h1>KUON NFT WEBSITE TERMS OF SERVICE</h1>
+
+      <h2>1. Acceptance of Terms</h2>
+      <p>By accessing kuonnft.xyz and any services related to KUON, you agree to be bound by these Terms of Service. If you do not agree, please discontinue use of the website and related services.</p>
+
+      <h2>2. User Eligibility</h2>
+      <p>Users must be at least 18 years old or the legal age of majority in their jurisdiction.</p>
+      <p>By using KUON, you represent and warrant that your participation complies with all applicable laws and regulations.</p>
+
+      <h2>3. NFT Purchase</h2>
+      <p>KUON NFTs are digital collectibles recorded on the blockchain through smart contracts.</p>
+      <p>All blockchain transactions are final and irreversible. KUON cannot reverse, cancel, or recover completed transactions.</p>
+      <p>Users are responsible for using a supported third-party wallet to purchase, hold, and transfer NFTs.</p>
+      <p>Users are solely responsible for the security of their wallets, private keys, seed phrases, passwords, and digital assets.</p>
+      <p>KUON is not responsible for any loss resulting from unauthorized access, phishing attacks, compromised wallets, lost credentials, or user error.</p>
+
+      <h2>4. NFT Ownership</h2>
+      <p>Ownership of a KUON NFT grants ownership of the NFT recorded on the blockchain but does not transfer ownership of KUON intellectual property, trademarks, artwork, branding, lore, or other project assets unless expressly stated otherwise.</p>
+      <p>Ownership is verified by the wallet holding the NFT on the blockchain.</p>
+
+      <h2>5. Intellectual Property</h2>
+      <p>All KUON artwork, logos, designs, lore, website content, branding, and related materials remain the exclusive property of KUON.</p>
+      <p>All rights not expressly granted are reserved.</p>
+
+      <h2>6. Privacy</h2>
+      <p>KUON may collect limited information necessary for website functionality, analytics, security, and community operations.</p>
+      <p>By using the website, you consent to the collection and processing of such information.</p>
+      <p>KUON does not request or store users' private keys, seed phrases, or wallet passwords.</p>
+
+      <h2>7. Disclaimer</h2>
+      <p>KUON NFTs are digital collectibles intended for artistic, entertainment, and community purposes only.</p>
+      <p>KUON NFTs are not securities, investment products, or financial instruments.</p>
+      <p>KUON makes no guarantees regarding future value, rarity, utility, market demand, or future project development.</p>
+      <p>NFT values may increase, decrease, or become worthless.</p>
+      <p>Participation in KUON is entirely at your own risk.</p>
+
+      <h2>8. Limitation of Liability</h2>
+      <p>Users acknowledge that blockchain technology involves inherent risks, including but not limited to smart contract vulnerabilities, network failures, digital asset volatility, and third-party service failures.</p>
+      <p>KUON shall not be liable for:</p>
+      <ul>
+        <li>Blockchain failures</li>
+        <li>Wallet compromises</li>
+        <li>Smart contract vulnerabilities</li>
+        <li>NFT price fluctuations</li>
+        <li>Marketplace issues</li>
+        <li>Technical interruptions</li>
+        <li>Loss of digital assets</li>
+      </ul>
+      <p>All services are provided on an "AS IS" and "AS AVAILABLE" basis.</p>
+
+      <h2>9. Applicable Law</h2>
+      <p>Any disputes arising from these Terms shall first be resolved through good-faith negotiation.</p>
+      <p>If a resolution cannot be reached, disputes may be submitted to arbitration or another appropriate legal process as permitted by applicable law.</p>
+
+      <h2>10. Contact</h2>
+      <p>Website: kuonnft.xyz</p>
+      <p>X (Twitter): <a href="https://x.com/KUONNFT" target="_blank" rel="noopener noreferrer">@KUONNFT</a></p>
+      <p>Discord: 久遠 | KUON</p>
+
+      <p class="signature">Thank you for visiting KUON.<br /><br />© 2026 KUON. All Rights Reserved.</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="privacyModal" class="modal" aria-hidden="true">
+    <div class="modal-card">
+      <button id="privacyClose" class="modal-close" data-i18n="close">CLOSE</button>
+      <div data-i18n-html="privacyContent">
+<h1>PRIVACY &amp; CREDITS</h1>
+
+<h2>Privacy</h2>
+
+<p>KUON may collect limited information necessary for website functionality, analytics, security, and wallet-related interactions.</p>
+
+<p>This information may include:</p>
+
+<ul>
+  <li>Browser information</li>
+  <li>Device information</li>
+  <li>Wallet addresses</li>
+  <li>Website usage analytics</li>
+</ul>
+
+<p>KUON does not request, store, or have access to users' private keys, seed phrases, or wallet passwords.</p>
+
+<p>KUON does not sell personal information to third parties.</p>
+
+<p>By using kuonnft.xyz, you consent to the collection and processing of such information.</p>
+
+<hr>
+
+<h2>Third-Party Services</h2>
+
+<p>KUON may utilize third-party services including wallet providers, analytics providers, hosting services, social media platforms, and content providers.</p>
+
+<p>These services operate under their own terms and privacy policies.</p>
+
+<hr>
+
+<h2>Data Security</h2>
+
+<p>KUON takes reasonable measures to help protect website functionality and user interactions. However, no method of electronic transmission or storage is completely secure, and KUON cannot guarantee absolute security.</p>
+
+<hr>
+
+<h2>Disclaimer</h2>
+
+<p>KUON is a digital art and storytelling project.</p>
+
+<p>Nothing contained on this website constitutes financial advice, investment advice, legal advice, or any other form of professional advice.</p>
+
+<p>KUON NFTs are intended for artistic, entertainment, and community purposes only.</p>
+
+<p>Users are solely responsible for conducting their own research and making their own decisions regarding digital assets, blockchain technologies, and related activities.</p>
+
+<hr>
+
+<h2>Wallet Disclaimer</h2>
+
+<p>Users are responsible for maintaining the security of their wallets, private keys, seed phrases, passwords, devices, and internet connections.</p>
+
+<p>KUON cannot recover lost wallets, private keys, seed phrases, passwords, digital assets, or blockchain transactions.</p>
+
+<p>All blockchain transactions are final and irreversible.</p>
+
+<hr>
+
+<h2>Intellectual Property</h2>
+
+<p>All original KUON artwork, visual designs, logos, branding elements, story content, written materials, website content, and related assets are protected by applicable intellectual property laws unless otherwise stated.</p>
+
+<p>Third-party content remains the property of its respective owners and is used under applicable licenses.</p>
+
+<hr>
+
+<h2>Limitation of Liability</h2>
+
+<p>KUON, its creators, contributors, affiliates, and service providers shall not be liable for any direct, indirect, incidental, consequential, special, punitive, or exemplary damages arising from the use of this website.</p>
+
+<p>This includes, but is not limited to:</p>
+
+<ul>
+  <li>Loss of digital assets</li>
+  <li>Wallet compromise</li>
+  <li>Service interruptions</li>
+  <li>Website downtime</li>
+  <li>Technical failures</li>
+  <li>Third-party platform issues</li>
+  <li>Blockchain network issues</li>
+</ul>
+
+<p>All services are provided on an "AS IS" and "AS AVAILABLE" basis.</p>
+
+<hr>
+
+<h2>Changes</h2>
+
+<p>KUON reserves the right to modify, update, revise, or replace this Privacy &amp; Credits page at any time without prior notice.</p>
+
+<p>Any changes will be reflected on this page with an updated revision date.</p>
+
+<p>Continued use of the website following any modifications constitutes acceptance of the updated policy.</p>
+
+<hr>
+
+<h2>Music Credits</h2>
+
+<p>The following music is used under their respective Creative Commons licenses.</p>
+
+<h3>Ronin</h3>
+
+<p>Ronin by yoitrax<br>
+https://soundcloud.com/yoitrax</p>
+
+<p>Music promoted on https://www.chosic.com/free-music/all/</p>
+
+<p>Creative Commons Attribution 3.0 Unported (CC BY 3.0)<br>
+https://creativecommons.org/licenses/by/3.0/</p>
+
+<hr>
+
+<h3>Samurai Saké Showdown</h3>
+
+<p>Samurai Saké Showdown by Darren Curtis<br>
+https://www.darrencurtismusic.com/</p>
+
+<p>Music promoted by https://www.chosic.com/free-music/all/</p>
+
+<p>Creative Commons CC BY 3.0<br>
+https://creativecommons.org/licenses/by/3.0/</p>
+
+<hr>
+
+<h3>Konnichiwa</h3>
+
+<p>Konnichiwa by Alex-Productions<br>
+https://onsound.eu/</p>
+
+<p>Music promoted by https://www.chosic.com/free-music/all/</p>
+
+<p>Creative Commons CC BY 3.0<br>
+https://creativecommons.org/licenses/by/3.0/</p>
+
+<hr>
+
+<h3>EpicBattle J</h3>
+
+<p>EpicBattle J by PeriTune<br>
+https://peritune.com/</p>
+
+<p>Music promoted by https://www.chosic.com/free-music/all/</p>
+
+<p>Creative Commons CC BY 4.0<br>
+https://creativecommons.org/licenses/by/4.0/</p>
+
+<hr>
+
+<p>All music remains the property of its respective creators and is used in accordance with the terms of their respective Creative Commons licenses.</p>
+
+<hr>
+
+<h2>Contact</h2>
+
+<p>Website: kuonnft.xyz</p>
+
+<p>X (Twitter): @KUONNFT</p>
+
+<p>Discord: 久遠 | KUON</p>
+
+<p>© 2026 KUON. All Rights Reserved.</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
